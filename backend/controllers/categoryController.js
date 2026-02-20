@@ -192,7 +192,7 @@ exports.updateCategory = async (req, res) => {
         );
 
         if (!updateCategory){
-            return res.status(400).json({
+            return res.status(404).json({
                 success: false,
                 message: 'Categoria no encontrada'
             });
@@ -239,7 +239,7 @@ exports.updateCategory = async (req, res) => {
     try{
         const SubCategory = require('../models/Subcategory');
         const Product = require('../models/Product');
-        const isHardDelete = req.query.isHardDelete === 'true';
+        const isHardDelete = req.query.hardDelete === 'true';
 
         //Buscar la categoria a eliminar
         const category = await Category.findById(req.params.id);

@@ -238,36 +238,27 @@ exports.updateSubcategory = async (req, res) => {
                 });
         } else {
             //soft delete solo marcar como inactivo con cascada
-            category.active = false;
-            await category.save();
-            
-            //desactivar todas las subcategorias
-            const subcategories = await Subcategory.updateMany(
-                { category: req.params.id },
-                { active: false}
-            );
-
-            //desactivar todos los productos relacionados por la categoria y subcategoria
+            subcategory.active = false;
+            await subcategory.save();
+            //desactivar todas las subcategorias relacionadas
             const products = await Product.updateMany(
                 { category: req.params.id},
                 { active: false}
             );
-
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
-                message: 'Categoria desactivada exitosamente y sus subcategorias y productos asociados',
+                message: 'Subcategoria desactivada exitosamente y sus productos asociados',
                 data: {
-                    category: category,
-                    subcategoriesDeactivated: subcategories.modifiedCount,
+                    subcategory: subcategory,
                     productsDeactivated: products.modifiedCount
                 }
             });
         }
     } catch (error){
-        console.error('Error en deleteCategory:', error);
+        console.error('Error al desactivar la subcategoria:', error);
         res.status(500).json({
             success: false,
-            message: 'Error al desactivar la categoria',
+            message: 'Error al desactivar la subcategoria',
             error: error.message
         });
     }
