@@ -112,3 +112,108 @@ exports.getUserById = async (req, res) =>{
         });
     }
 };
+/**
+ * CREATE Crear usuario nuevo
+ * POST / api / users
+ * Auth Bearer token requerido}
+ * Roles admin y coordinador (con restricciones)
+ * Validaciones
+ * 201 Usuario no encontrado
+ * 400 validacion fallida
+ * 500 error de servidor 
+ */
+
+exports.createUser = async (req, res) => {
+    try{
+        const { username, email, password, role} = req.body;
+
+        //Crear usuario nuevo
+        const user = new user({
+            username,
+            email,
+            password,
+            role
+        });
+
+        //Guardar en BD
+
+        const savedUser = await user.save();
+
+        res.status(201).json({
+            success: true,
+            message: 'Usuario creado',
+            user:{
+                id: savedUser._id,
+                username: savedUser.username,
+                email: savedUser.email,
+                role: savedUser.role
+            }
+        });
+    } catch (error){
+        console.error('Error al crear usuario', error);
+        res.status(500).json({
+            success: false,
+            message: 'Usuario no creado',
+            error: error.message
+        }) 
+    }
+};
+
+/**
+ * UPDATE actualizar un usuario existente
+ * PUT /api/users/:id
+ * Auth Bearer token requerido
+ * Validaciones
+ * Auxiliar solo puede actualizar su propio perfil
+ * auxiliar no puede cambiar su rol
+ * admin, coordinador pueden actualizar otros usuarios
+ * 
+ * 200 usuario actualizado
+ * 403 sin permiso para actualizar
+ * 404 usuario no encontrado
+ * 500 error de servidor
+ */
+
+exports.updateUser = async(req, res) => {
+    try{
+        //Restriccion: auxiliar solo puede actualizar su propio perfil
+        if (req.userRole === 'auxiliar' && req.userId.toString() !== req.params.id){
+            return res.status(403).json({
+                success: false,
+                message:'No tienes permiso para actualizar este usuario'
+            });
+        } 
+        //Restriccion: auxiliar no puede actualizar su rol
+        if (req.userRole === 'auxiliar' && req.body.role){
+            return res.status(403).json({
+                success: false,
+                message: 'No puedes modificar tu propio rol'
+            });
+        }
+        const updatedUser = await User.findByIdAndUpdate( 
+            req.params.id,
+            { $set: req.body },
+            { new: true } // retorna documento actualizado
+        ).select('-password'); // no retorna contraseña
+
+        if (!updatedUser){
+            return res.status(404).json({
+                success: false,
+                message: 'Usuario no encontrado'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Usuario actualizado correctamente',
+            data: updatedUser
+        });
+    } catch (error){
+        console.error('Error al actualizar usuario', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al actualizar usuario',
+            error: error.message
+        });
+    }
+};
