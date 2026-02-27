@@ -72,5 +72,35 @@ const verifyTokenFn = (req, res, next) => {
 
         //verificar el token con la clave secreta
         const decoded = jwt.verify(token, config.secret);
+
+        //adjuntar informacion del usuario al request object para que otros middlewares y rutas puedan acceder a ella
+        req.userId = decoded.id; // id de mongoDB
+        req.userRole = decoded.role; // rol de usuario
+        req.userEmail = decoded.email; // email de usuario
+
+        //token es valido continuar siguiente middleware o ruta
+        next();
+    } catch (error){
+        //token invalido o expirado
+        return res.status(401).json({
+            success: false,
+            message: 'token invalido o expirado',
+            error: error.message
+        });
     }
-}
+};
+
+/**
+ * Validacion de funcion para mejor seguridad y manejo de errores
+ * verificar que verifyTokenfn sea una funcion valida
+ * esto es una validacion de seguridad para que el middleware se exporte correctamente
+ * si algo sale mal en su definicion lanzara un error en tiempo de carga del modulo
+ */
+if (typeof verifyTokenFn !== 'function'){
+    console.error('Error: verifyTokenFn no es una funcion valida');
+    throw new Error('VerifyTokenFn debe ser una funcion');
+};
+//exportar el middleware
+module.exports = {
+    verifyTokenFn: verifyTokenFn
+};

@@ -209,11 +209,77 @@ exports.updateUser = async(req, res) => {
             data: updatedUser
         });
     } catch (error){
-        console.error('Error al actualizar usuario', error);
+        console.error('Error en updateUser', error);
         res.status(500).json({
             success: false,
             message: 'Error al actualizar usuario',
             error: error.message
         });
+    }
+};
+
+/**
+ * DELETE eliminar usuario
+ * delete /api/users/:id
+ * roles: admin
+ * query params: 
+ * hardDelete = true eliminar permanentemente
+ * default soft delete desactivar usuario
+ * 
+ * El admin solo puede desactivar otro admin
+ * retorna
+ * 200: usuario eliminado o desactivado
+ * 403: Sin permiso para eliminar
+ * 404: usuario no encontrado
+ * 500: error de servidor
+ */
+
+exports.deleteUser = async(req, res) => {
+    try {
+        const isHardDelete = req.query.hardDelete === 'true';
+        const userToDelete = await user.findById(req.params.id);
+      
+      if(!userToDelete){
+        return res.status(404).json({
+            success: false,
+            message: 'Usuario no encontrado'
+        });
+      }
+      // proteccion no permitir desactivar otros admin
+      //solo el admin puede desactivarse o eliminar otro admin
+      if(userToDelete.role === 'admin' && req.userToDelete._id.toString() !== req.userId.toString()){
+        return res.status(403).json({
+            success: false,
+            message: 'No tienes permisos para eliminar o desactivar administradores'
+        });
+      }
+      if(isHardDelete) {
+        //=====     HARD DELETE: Eliminar permanentemente de la BD ===========
+
+        await User.findByIdAndDelete(req.params.id);
+
+        res.status(200).json({
+            success: true,
+            message:'Usuario eliminado permanentemente',
+            data: userToDelete
+        });
+      } else{
+        //========== SOFT DELETE: Solo marcar como inactivo =========
+        userToDelete.active = false;
+        await userToDelete.save();
+        res.status(200).json({
+            success: true,
+            message: 'Usuario desactivado con exito',
+            data: userToDelete
+        });
+      }
+    } catch (error){
+        console.error('Error en DeleteUser', error);
+        res.status(500).json({
+            success: false,
+            message:'error al eliminar usuario',
+            error: error.message
+        });
+
     }
 };
