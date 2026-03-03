@@ -20,7 +20,7 @@ const Subcategory = require ('../models/Subcategory');
  * 500 Error de base de datos
  */
 
-exports.getStatistics = async (req, res) => {
+const getStatistics = async (req, res) => {
     try{
         //Ejecutar todas las queries en paralelo
         const [totalUsers, totalProducts, totalCategories, totalSubcategories] = await Promise.all ([
