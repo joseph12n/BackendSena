@@ -72,4 +72,4 @@ const userSchema = new mongoose.Schema({
 
     //crear y exportar el modulo de usuario
 
-    module.exports = moongose.model('User', userSchema);
+    module.exports = mongoose.model('User', userSchema);

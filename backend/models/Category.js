@@ -85,4 +85,4 @@ categorySchema.index({name: 1},{
 });
 
 //exportar el modelo
-module.exports = moongose.model('Category', categorySchema);
+module.exports = mongoose.model('Category', categorySchema);

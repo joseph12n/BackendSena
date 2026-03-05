@@ -23,7 +23,7 @@ const productSchema = new moongoose.Schema({
     
     //Descripcion del producto - requerida
     description: {
-            type: String,
+            type: String, //Campo tipo texto acepta caracteres especiales
             require: [true, 'La descripcion es requerida'],
             trim: true
     },
@@ -34,7 +34,7 @@ const productSchema = new moongoose.Schema({
     price: {
             type: Number,
             require: [true, 'El precio es obligatorio'],
-            min:[0, 'El precio no puede ser negativo']
+            min:[0, 'El precio no puede ser negativo'] 
     },
 
     // cantidad de stock
@@ -56,7 +56,7 @@ const productSchema = new moongoose.Schema({
         required: [true, 'La categoria es requerida']
     },
 
-     subcategory: {
+     subcategory: { 
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Subcategory', // puede ser poblado con .populate ('subcategory')
         required: [true, 'La subcategoria es requerida']
@@ -100,7 +100,7 @@ const productSchema = new moongoose.Schema({
 productSchema.post('save', function(error, doc, next) {
         //verificar si es error de mongoDB por violacion de indice unico
     if (error.name === 'MongoServerError' && error.code === 11000){
-            return next(new Error('Ya existe un producto con ese nombre'));  
+            return next(new Error('Ya existe un producto con ese nombre'))
     } 
     // pasar el error tal como es
     next(error);
@@ -114,4 +114,4 @@ productSchema.post('save', function(error, doc, next) {
  */
 
 //exportar el modelo
-module.exports = moongose.model('Product', productSchema);
+module.exports = mongoose.model('Product', productSchema);
