@@ -102,7 +102,10 @@ const checkDuplicateUsernameOrEmail = async (req, res, next) => {
 
     //si role esta presente en el request
     if(req.body.role) {
-        // convertir a array si es string (soporta ambos formatos)
+        
+    /** Guardar los roles en un array soporta un solo rol o multiples en el caso un usuario
+    tenga varios roles asignados
+    */
         const roles = Array.isArray(req.body.role) ? req.body.role: [req.body.role];
 
         // filtrar roles que no estan en la lista valida

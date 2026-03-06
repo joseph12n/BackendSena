@@ -52,9 +52,13 @@ router.post('/',
     productController.createProduct
 );
 
-router.get('/', productController.getproduct);
+router.get('/',
+    verifyToken, 
+    productController.getproduct);
 
-router.get('/:id', productController.getProductById);
+router.get('/:id', 
+    verifyToken,
+    productController.getProductById);
 
 router.put('/:id',
     verifyToken,
