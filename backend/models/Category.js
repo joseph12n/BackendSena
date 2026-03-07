@@ -7,7 +7,7 @@ const mongoose =require('mongoose');
 
 //Campos de categoria
 
-const categorySchema = new moongoose.Schema({
+const categorySchema = new mongoose.Schema({
     //nombre de la categoria unico y requerido
     name:{
         type: String,

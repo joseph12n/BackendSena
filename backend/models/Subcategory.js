@@ -10,7 +10,7 @@ const mongoose =require('mongoose');
 
 //Campos de subcategoria
 
-const subcategorySchema = new moongoose.Schema({
+const subcategorySchema = new mongoose.Schema({
     //nombre de la subcategoria unico y requerido
     name:{
         type: String,

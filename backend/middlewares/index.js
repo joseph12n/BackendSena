@@ -4,13 +4,13 @@
  * permite importar multiples middlewares de forma concisa en las rutas
  */
 
-const authJWR = require('./authJwt');
-const verifySignUp = require('./verifySingUp');
+const authJWT = require('./authJwt');
+const verifySingUp = require('./verifySingUp');
 
 //exportar todos los middlewares agrupados o por modulo
 
 module.exports = {
     authJWT: require('./authJwt'),
-    verifySignUp: require('./verifySingUp'),
+    verifySingUp: require('./verifySingUp'),
     role: require('./role')
 };

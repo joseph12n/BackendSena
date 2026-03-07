@@ -12,7 +12,7 @@ const mongoose =require('mongoose');
 
     //campos de la tabla producto
     
-const productSchema = new moongoose.Schema({
+const productSchema = new mongoose.Schema({
     //nombre del producto unico y requerido
     name:{
         type: String,

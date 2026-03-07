@@ -11,30 +11,30 @@
  */
 
 const express = require('express');
-const router = express.router();
+const router = express.Router();
 const subcategoryController = require('../controllers/subcategoryController');
 const { check } = require('express-validator');
-const { verifyToken } = require('../middleswares/authJwt');
-const { checkRole } = require('../middleswares/role');
+const { verifyToken } = require('../middlewares/authJwt');
+const { checkRole } = require('../middlewares/role');
 
 const validateSubcategory = [
     check('name')
         .not().isEmpty()
-        .withmessage('el nombre es obligatorio'),
+        .withMessage('el nombre es obligatorio'),
  
     check('description')
         .not().isEmpty()
-        .withmessage('la descipcion es obligatoria'),
+        .withMessage('la descipcion es obligatoria'),
 
     check('category')
         .not().isEmpty()
-        .withmessage('la categoria es obligatoria'),
+        .withMessage('la categoria es obligatoria'),
 ];
 //Rutas CRUD
 
 router.post('/',
     verifyToken,
-    checkRole(['admin','coordinador']),
+    checkRole('admin','coordinador'),
     validateSubcategory,
     subcategoryController.createSubcategory
 );
@@ -49,14 +49,14 @@ router.get('/:id',
 
 router.put('/:id',
     verifyToken,
-    checkRole(['admin','coordinador']),
+    checkRole('admin','coordinador'),
     validateSubcategory,
     subcategoryController.updateSubcategory
 );
 router.delete('/:id',
     verifyToken,
-    checkRole(['admin']),
-    subcategoryController.deleteSubcategory
+    checkRole('admin'),
+    subcategoryController.deleteCategory
 );
 
 module.exports = router;

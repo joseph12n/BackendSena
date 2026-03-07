@@ -11,10 +11,10 @@
  */
 
 const express = require('express');
-const router = express.router();
+const router = express.Router();
 const categoryController = require('../controllers/categoryController');
-const { verifyToken } = require('../middleswares/authJwt');
-const { checkRole } = require('../middleswares/role');
+const { verifyToken } = require('../middlewares/authJwt');
+const { checkRole } = require('../middlewares/role');
 
 //Rutas CRUD
 
