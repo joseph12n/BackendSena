@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
     userName: {
         type: String,
         required: true,
-        Unique: true,
+        unique: true,
         trim: true //elimina los espacios en blanco al inicio y al final 
     },
     //Email debe ser unico valido en minusculas
@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
         unique: true,
         lowercase: true,// convierte a minusculas
         trim: true,//elimina los espacions
-        match: [/\S+@S+\,\S+/, 'El correo no es valido'] // valida el patron del email
+        match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'El correo no es valido'] // valida el patron del email
     },
     //contraseña - requerida, minimo 4 caracteres
     password: {
