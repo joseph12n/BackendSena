@@ -42,7 +42,7 @@ const subcategorySchema = new mongoose.Schema({
     }
 }, {
     timestamps: true, // agrega createdAt y updateAt automaticamente
-    versinoKey: false, // no incluir campos __V
+    versionKey: false, // no incluir campos __V
 });
 
 /**

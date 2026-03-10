@@ -22,13 +22,13 @@ exports.createCategory = async (req, res) => {
     try{
         const { name, description } = req.body;
         //validacion de los campos de entrada
-        if(!name || typeof name !== 'string' || name.trim()){
+        if(!name || typeof name !== 'string' || !name.trim()){
             return res.status(400).json({
                 success: false,
-                message: 'El modelo es obligatorio, debe ser texto valido'
+                message: 'El nombre es obligatorio, debe ser texto valido'
             });
         }
-            if(!description || typeof description !== 'string' || description.trim()){
+            if(!description || typeof description !== 'string' || !description.trim()){
             return res.status(400).json({
                 success: false,
                 message: 'la descripcion es obligatoria y debe ser texto valido'
@@ -118,7 +118,7 @@ exports.getCategoryById =async (req, res) => {
         try{
     //por defecto solo las categorias activas
     //IncludeInactive=true permite ver desactivadas
-    const category = await Category.findById(req,params.id);
+    const category = await Category.findById(req.params.id);
     if (!category) {
         return res.status(404).json({
             success: false,

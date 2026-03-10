@@ -102,7 +102,7 @@ exports.getSubcategoryById =async (req, res) => {
         try{
     //por defecto solo las categorias activas
     //IncludeInactive=true permite ver desactivadas
-    const subcategory = await Subcategory.findById(req,params.id).populate('category', 'name');
+    const subcategory = await Subcategory.findById(req.params.id).populate('category', 'name');
     if (!subcategory) {
         return res.status(404).json({
             success: false,
@@ -141,10 +141,30 @@ exports.updateSubcategory = async (req, res) => {
     try{
         const { name, description, category } = req.body;
 
+        //construir objeto de actualizacion solo con campos enviados
+        const updateData = {};
 
-        // Verificar si cambia la categoria padre
+        if (name){
+            updateData.name = name.trim();
 
+            //verificar si el nuevo nombre ya existe en otra subcategoria
+            const existing = await Subcategory.findOne({
+                name: updateData.name,
+                _id: { $ne: req.params.id}
+            });
+            if(existing) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Este nombre ya existe'
+                });
+            }
+        }
+        if (description){
+            updateData.description = description.trim();
+        }
         if (category){
+            updateData.category = category;
+            // Verificar si cambia la categoria padre
             const parentCategory = await Category.findById(category);
             if (!parentCategory){
                 return res.status(400).json({
@@ -153,15 +173,10 @@ exports.updateSubcategory = async (req, res) => {
                 });
              };
         }
-        //construir objeto de actualizacion solo con campos enviados
 
         const updateSubcategory = await Subcategory.findByIdAndUpdate(
             req.params.id, 
-            { 
-                name: name ? name.trim() : undefined,
-                description: description ? description.trim() : undefined, 
-                category
-            },
+            updateData,
             {new: true, runValidators: true}
         );
 
@@ -174,7 +189,7 @@ exports.updateSubcategory = async (req, res) => {
         res.status(200).json({
             success: true,
             message: 'subcategoria actualizada exitozamente',
-            data: updateCategory
+            data: updateSubcategory
         });
     } catch (error){
         console.error('Error en actualizar subcategoria', error);

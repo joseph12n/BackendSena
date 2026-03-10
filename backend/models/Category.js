@@ -30,7 +30,7 @@ const categorySchema = new mongoose.Schema({
     }
 }, {
     timestamps: true, // agrega createdAt y updateAt automaticamente
-    versinoKey: false, // no incluir campos __V
+    versionKey: false, // no incluir campos __V
 });
 
 /**
@@ -46,10 +46,11 @@ const categorySchema = new mongoose.Schema({
  * ignora errores si el indice no existe
  * continua con el guardado normal
  */
+/*
 categorySchema.pre('save', async function(next){
     try{
         //obtener referencia de la coleecion de mongoDB 
-        const collection = this.contructor.collection
+        const collection = this.constructor.collection
         //obtener lista de todos los indices
         const indexes = await collection.indexes();
 
@@ -71,6 +72,7 @@ categorySchema.pre('save', async function(next){
     // Continuar con el guardado
     next();
 });
+*/
 
 /**
  * crear indice unico

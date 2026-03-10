@@ -21,8 +21,8 @@ const config =require('../config/auth.config');
 exports.signup = async (req, res) => {
     try{
         //crear nuevo usuario
-        const user = new user({
-            username: req.body.username,
+        const user = new User({
+            userName: req.body.username,
             email: req.body.email,
             password: req.body.password,
             role: req.body.role || 'auxiliar' //por defecto el rol es auxiliar
@@ -45,8 +45,8 @@ exports.signup = async (req, res) => {
 
         //Preparando respuesra sin mostrar la contraseña
         const UserResponse = {
-            id: savedUser.username,
-            username: savedUser.username,
+            id: savedUser.userName,
+            userName: savedUser.userName,
             email: savedUser.email,
             role: savedUser.role,
         };
@@ -96,7 +96,7 @@ exports.signin = async(req, res) => {
         //buscar usuario por email o username
         const user = await User.findOne({
             $or: [
-                { username: req.body.username},
+                { userName: req.body.username},
                 { email: req.body.email}
             ]
         }).select('+password'); //inlcuye password field
@@ -141,7 +141,7 @@ exports.signin = async(req, res) => {
         // prepara respuesta sin mostrar la contraseña
         const UserResponse = {
             id: user._id,
-            username: user.username,
+            userName: user.userName,
             email: user.email,
             role: user.role
         };

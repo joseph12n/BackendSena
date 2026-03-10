@@ -74,7 +74,7 @@ exports.getAllUsers = async (req, res) =>{
 exports.getUserById = async (req, res) =>{
     try{
         // por defecto solo mostrar usuarios activos
-        const user = await user.findById(req.params.id).select('-password');
+        const user = await User.findById(req.params.id).select('-password');
 
         if (!user) {
             return res.status(404).json({
@@ -84,14 +84,14 @@ exports.getUserById = async (req, res) =>{
         }
         //validaciones de acceso
         //los auxiliares soloo pueden ver su propio perfil
-        if (req.userRole === 'auxiliar' && req.userId!== user.id.toString()){
+        if (req.userRole === 'auxiliar' && req.userId!== user._id.toString()){
             return res.status(403).json({
                 success: false,
                 message: 'no tienes permisos para ver este usuario'
             });
         }
         //los coordinadores no pueden ver administradores
-        if (req.userRole === 'coordinador' && role === 'admin'){
+        if (req.userRole === 'coordinador' && user.role === 'admin'){
             return res.status(403).json({
                 success: false,
                 message: 'no puedes ver usuarios admin'
@@ -128,8 +128,8 @@ exports.createUser = async (req, res) => {
         const { username, email, password, role} = req.body;
 
         //Crear usuario nuevo
-        const user = new user({
-            username,
+        const user = new User({
+            userName: username,
             email,
             password,
             role
@@ -144,7 +144,7 @@ exports.createUser = async (req, res) => {
             message: 'Usuario creado',
             user:{
                 id: savedUser._id,
-                username: savedUser.username,
+                userName: savedUser.userName,
                 email: savedUser.email,
                 role: savedUser.role
             }
