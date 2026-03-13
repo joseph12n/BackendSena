@@ -9,7 +9,7 @@ const Subcategory = require('../models/Subcategory');
 
 /**
  * CREATE: crear nuevo producto
- * POST /api/productos
+ * POST /api/products
  * Auth bearer token requerido
  * Roles: admin y coordinador
  * body requerido:
@@ -283,7 +283,7 @@ exports.createProduct = async (req, res) => {
 
     exports.deleteProduct = async (req, res ) => {
         try{
-            const isHardDelete = req.query.isHardDelete === 'true';
+            const isHardDelete = req.query.hardDelete === 'true';
             const product = await Product.findById(req.params.id);
 
             if(!product){

@@ -44,7 +44,7 @@ exports.createCategory = async (req, res) => {
         if (existingCategory) {
             return res.status(400).json({
                 success: false,
-                message: 'Ya existe una vategoria con ese nombre'
+                message: 'Ya existe una categoria con ese nombre'
             });
         }
 
@@ -258,8 +258,8 @@ exports.updateCategory = async (req, res) => {
                 category: req.params.id })).map(s => s._id);
                 //paso 2 para eliminar todos productos
                 await Product.deleteMany({ category: req.params.id });
-                //paso 3 eliminar todos de subcategoria
-                await subcategory.deleteMany({ SubCategory:{ $in: subIds} } );
+                //paso 3 eliminar todos productos de las subcategorias
+                await Product.deleteMany({ subcategory: { $in: subIds } });
                 //paso 4 eliminar todas las subcategorias de esta categoria
                 await SubCategory.deleteMany({ category: req.params.id });
                 // paso 5 eliminar la categoria misma
